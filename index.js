@@ -185,6 +185,7 @@ const SignatureView = forwardRef(({
   return (
     <View style={[styles.webBg, style]}>
       <WebView
+        androidHardwareAccelerationDisabled={true}
         style={{ opacity: 0.99, overflow: 'hidden' }} 
         bounces={false}
         scrollEnabled={scrollable}
