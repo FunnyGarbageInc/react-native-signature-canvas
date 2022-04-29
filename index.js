@@ -32,18 +32,18 @@ const SignatureView = forwardRef(({
   imageType = "",
   minWidth = 0.5,
   maxWidth = 2.5,
-  onOK = () => {},
-  onEmpty = () => {},
-  onClear = () => {},
-  onUndo=()=>{},
-  onRedo=()=>{},
-  onDraw=()=>{},
-  onErase=()=>{},
-  onGetData=()=>{},
-  onChangePenColor=()=>{},
-  onChangePenSize=()=>{},
-  onBegin = () => {},
-  onEnd = () => {},
+  onOK = () => { },
+  onEmpty = () => { },
+  onClear = () => { },
+  onUndo = () => { },
+  onRedo = () => { },
+  onDraw = () => { },
+  onErase = () => { },
+  onGetData = () => { },
+  onChangePenColor = () => { },
+  onChangePenSize = () => { },
+  onBegin = () => { },
+  onEnd = () => { },
   overlayHeight = 0,
   overlayWidth = 0,
   overlaySrc = null,
@@ -69,7 +69,7 @@ const SignatureView = forwardRef(({
     injectedJavaScript = injectedJavaScript.replace(/<%dotSize%>/g, dotSize);
     injectedJavaScript = injectedJavaScript.replace(/<%minWidth%>/g, minWidth);
     injectedJavaScript = injectedJavaScript.replace(/<%maxWidth%>/g, maxWidth);
-    
+
     let html = htmlContentValue(injectedJavaScript);
     html = html.replace(/<%bgWidth%>/g, bgWidth);
     html = html.replace(/<%bgHeight%>/g, bgHeight);
@@ -85,15 +85,15 @@ const SignatureView = forwardRef(({
 
     return { html };
   }, [customHtml, autoClear, trimWhitespace, rotated, imageType, webStyle, descriptionText, confirmText, clearText, dataURL])
-  
-  const isJson = (str)=> {
+
+  const isJson = (str) => {
     try {
-        JSON.parse(str);
+      JSON.parse(str);
     } catch (e) {
-        return false;
+      return false;
     }
     return true;
-   }
+  }
 
   const getSignature = e => {
     switch (e.nativeEvent.data) {
@@ -128,7 +128,7 @@ const SignatureView = forwardRef(({
         onChangePenSize();
         break;
       default:
-        isJson(e.nativeEvent.data)? onGetData(e.nativeEvent.data): onOK(e.nativeEvent.data);
+        isJson(e.nativeEvent.data) ? onGetData(e.nativeEvent.data) : onOK(e.nativeEvent.data);
     }
   };
 
@@ -165,12 +165,12 @@ const SignatureView = forwardRef(({
     },
     changePenColor: (color) => {
       if (webViewRef.current) {
-        webViewRef.current.injectJavaScript("changePenColor('"+color+"');true;");
+        webViewRef.current.injectJavaScript("changePenColor('" + color + "');true;");
       }
     },
     changePenSize: (minW, maxW) => {
       if (webViewRef.current) {
-        webViewRef.current.injectJavaScript("changePenSize("+minW+','+maxW+");true;");
+        webViewRef.current.injectJavaScript("changePenSize(" + minW + ',' + maxW + ");true;");
       }
     },
     getData: () => {
@@ -180,18 +180,19 @@ const SignatureView = forwardRef(({
     }
   }), [webViewRef]);
 
-  const renderError = ({nativeEvent}) => console.warn("WebView error: ", nativeEvent);
+  const renderError = ({ nativeEvent }) => console.warn("WebView error: ", nativeEvent);
 
   return (
-    <View style={[styles.webBg, style]}>
+    <View style={[styles.webBg, style]}
+      renderToHardwareTextureAndroid={true}>
       <WebView
         androidHardwareAccelerationDisabled={true}
-        style={{ opacity: 0.99, overflow: 'hidden' }} 
+        style={{ opacity: 0.99, overflow: 'hidden' }}
         bounces={false}
         scrollEnabled={scrollable}
-        androidHardwareAccelerationDisabled={androidHardwareAccelerationDisabled}
         ref={webViewRef}
         useWebKit={true}
+        androidLayerType="software"
         source={source}
         onMessage={getSignature}
         javaScriptEnabled={true}
